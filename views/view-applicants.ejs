@@ -1,0 +1,105 @@
+<%- include('partials/header') %>
+
+<div class="main-container">
+    <%- include('partials/sidebar', { page: 'applicants' }) %>
+    
+    <main class="main-content">
+        <div class="page-header">
+            <h1>Internship Applicants</h1>
+            <p>Review and manage student applications</p>
+        </div>
+
+        <div class="filters-section">
+            <div class="filter-group">
+                <select id="statusFilter">
+                    <option value="">All Statuses</option>
+                    <option value="pending">Pending</option>
+                    <option value="shortlisted">Shortlisted</option>
+                    <option value="rejected">Rejected</option>
+                </select>
+                
+                <select id="departmentFilter">
+                    <option value="">All Departments</option>
+                    <option value="Technology">Technology</option>
+                    <option value="Marketing">Marketing</option>
+                    <option value="Finance">Finance</option>
+                </select>
+                
+                <input type="text" id="searchInput" placeholder="Search by name or email...">
+            </div>
+        </div>
+
+        <div class="applicants-container">
+            <% if (applications && applications.length > 0) { %>
+                <div class="applicants-grid">
+                    <% applications.forEach(application => { %>
+                        <div class="applicant-card" data-status="<%= application.status %>" data-department="<%= application.internshipDepartment %>">
+                            <div class="applicant-header">
+                                <div class="applicant-info">
+                                    <h3><%= application.studentName %></h3>
+                                    <p><%= application.studentEmail %></p>
+                                </div>
+                                <span class="status-badge <%= application.status %>"><%= application.status %></span>
+                            </div>
+                            
+                            <div class="application-details">
+                                <div class="detail-row">
+                                    <i class="fas fa-briefcase"></i>
+                                    <span><%= application.internshipTitle %></span>
+                                </div>
+                                <div class="detail-row">
+                                    <i class="fas fa-building"></i>
+                                    <span><%= application.internshipDepartment %></span>
+                                </div>
+                                <div class="detail-row">
+                                    <i class="fas fa-calendar"></i>
+                                    <span>Applied: <%= application.appliedDate %></span>
+                                </div>
+                            </div>
+                            
+                            <div class="cover-letter-preview">
+                                <h4>Cover Letter</h4>
+                                <p><%= application.coverLetter ? application.coverLetter.substring(0, 120) + '...' : 'No cover letter provided' %></p>
+                            </div>
+                            
+                            <div class="applicant-actions">
+                                <% if (application.resume) { %>
+                                    <button class="btn-secondary small" onclick="viewResume('<%= application.resume %>')">
+                                        <i class="fas fa-file-pdf"></i> Resume
+                                    </button>
+                                <% } %>
+                                
+                                <% if (application.status === 'pending') { %>
+                                    <button class="btn-primary small" onclick="updateStatus('<%= application.id %>', 'shortlisted')">
+                                        <i class="fas fa-star"></i> Shortlist
+                                    </button>
+                                    <button class="btn-danger small" onclick="updateStatus('<%= application.id %>', 'rejected')">
+                                        <i class="fas fa-times"></i> Reject
+                                    </button>
+                                <% } else if (application.status === 'shortlisted') { %>
+                                    <button class="btn-success small">
+                                        <i class="fas fa-check"></i> Shortlisted
+                                    </button>
+                                    <button class="btn-danger small" onclick="updateStatus('<%= application.id %>', 'rejected')">
+                                        <i class="fas fa-times"></i> Reject
+                                    </button>
+                                <% } else { %>
+                                    <button class="btn-primary small" onclick="updateStatus('<%= application.id %>', 'pending')">
+                                        <i class="fas fa-undo"></i> Revert
+                                    </button>
+                                <% } %>
+                            </div>
+                        </div>
+                    <% }); %>
+                </div>
+            <% } else { %>
+                <div class="empty-state">
+                    <i class="fas fa-users"></i>
+                    <h3>No applications yet</h3>
+                    <p>Applications will appear here once students start applying to your internships</p>
+                </div>
+            <% } %>
+        </div>
+    </main>
+</div>
+<%- include('partials/footer') %>
