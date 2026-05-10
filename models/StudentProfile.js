@@ -26,12 +26,23 @@ const StudentProfileSchema = new mongoose.Schema({
     linkedin: { type: String, default: '' },
     github:   { type: String, default: '' },
 
+    // // Profile Image
+    // profileImage:          { type: String, default: '' },  // stored filename
+    // profileImageUpdatedAt: { type: Date },
+
+    // // Resume
+    // resume:          { type: String, default: '' },
+    // resumeOrigName:  { type: String, default: '' },
+    // resumeUpdatedAt: { type: Date },
+
     // Profile Image
-    profileImage:          { type: String, default: '' },  // stored filename
+    profileImage:          { type: String, default: '' },  // Cloudinary URL
+    profileImagePublicId:  { type: String, default: '' },  // for deletion
     profileImageUpdatedAt: { type: Date },
 
     // Resume
-    resume:          { type: String, default: '' },
+    resume:          { type: String, default: '' },  // Cloudinary URL
+    resumePublicId:  { type: String, default: '' },  // for deletion
     resumeOrigName:  { type: String, default: '' },
     resumeUpdatedAt: { type: Date },
 

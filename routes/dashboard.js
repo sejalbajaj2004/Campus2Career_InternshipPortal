@@ -33,11 +33,53 @@ router.get('/post-internship', requireAuth, requireCompany, (req, res) => {
 });
 
 // GET /applicants - View all applicants
+// router.get('/applicants', requireAuth, requireCompany, async (req, res) => {
+//     try {
+//         const applications = await Application.find()
+//             .populate('internshipId', 'title department')
+//             .populate('studentId', 'name email');
+
+//         res.render('view-applicants', { applications, user: req.user });
+//     } catch (error) {
+//         console.error('Applicants error:', error);
+//         res.status(500).send('Server Error');
+//     }
+// });
+
+// GET /applicants - View all applicants
 router.get('/applicants', requireAuth, requireCompany, async (req, res) => {
     try {
-        const applications = await Application.find()
+        const StudentProfile = require('../models/StudentProfile');
+
+        const rawApplications = await Application.find()
             .populate('internshipId', 'title department')
-            .populate('studentId', 'name email');
+            .populate('studentId', 'name email')
+            .sort({ appliedDate: -1 });
+
+        const applications = await Promise.all(rawApplications.map(async (app) => {
+            const profile = await StudentProfile.findOne({ userId: app.studentId?._id });
+            return {
+                id:                   app._id,
+                status:               app.status,
+                coverLetter:          app.coverLetter,
+                appliedDate:          app.appliedDate,
+                studentName:          app.studentId?.name  || 'Unknown',
+                studentEmail:         app.studentId?.email || '',
+                internshipTitle:      app.internshipId?.title      || '',
+                internshipDepartment: app.internshipId?.department || '',
+                profileImage:         profile?.profileImage   || '',
+                university:           profile?.university     || '',
+                major:                profile?.major          || '',
+                graduationYear:       profile?.graduationYear || '',
+                location:             profile?.location       || '',
+                skills:               profile?.skills         || [],
+                about:                profile?.about          || '',
+                linkedin:             profile?.linkedin       || '',
+                github:               profile?.github         || '',
+                resume:               profile?.resume         || '',
+                resumeOrigName:       profile?.resumeOrigName || 'Resume.pdf',
+            };
+        }));
 
         res.render('view-applicants', { applications, user: req.user });
     } catch (error) {
@@ -45,6 +87,7 @@ router.get('/applicants', requireAuth, requireCompany, async (req, res) => {
         res.status(500).send('Server Error');
     }
 });
+
 
 // GET /analytics - Analytics page
 router.get('/analytics', requireAuth, requireCompany, async (req, res) => {

@@ -202,7 +202,8 @@
             <div class="user-profile">
                 <div class="profile-info">
                     <% if (profile.profileImage) { %>
-                        <img src="/uploads/profile-images/<%= profile.profileImage %>"
+                        <!-- <img src="/uploads/profile-images/<%= profile.profileImage %>" -->
+                         <img src="<%= profile.profileImage %>"
                              alt="avatar" style="width:30px;height:30px;border-radius:50%;object-fit:cover;vertical-align:middle;">
                     <% } else { %>
                         <i class="fas fa-user-circle"></i>
@@ -281,7 +282,8 @@
                     <!-- Clickable avatar -->
                     <div class="avatar-wrapper" onclick="document.getElementById('avatarInputView').click()" title="Change photo">
                         <% if (profile.profileImage) { %>
-                            <img src="/uploads/profile-images/<%= profile.profileImage %>"
+                            <!-- <img src="/uploads/profile-images/<%= profile.profileImage %>" -->
+                            <img src="<%= profile.profileImage %>"
                                  alt="Profile Photo" class="profile-avatar-img">
                         <% } else { %>
                             <div class="profile-avatar-placeholder">
@@ -491,7 +493,8 @@
                         <div class="edit-avatar-area">
                             <% if (profile.profileImage) { %>
                                 <img id="editAvatarPreview"
-                                     src="/uploads/profile-images/<%= profile.profileImage %>"
+                                     
+                                     src="<%= profile.profileImage %>"
                                      alt="Profile" class="edit-avatar-img">
                             <% } else { %>
                                 <div id="editAvatarPreview" class="edit-avatar-placeholder">
@@ -768,7 +771,11 @@
             uploadResume(e.target.files[0], 'resumeProgressEdit'));
 
         // ── Resume download ───────────────────────────────────────────────────
-        function downloadResume() { window.location.href = '/api/student/resume/download'; }
+        // function downloadResume() { window.location.href = '/api/student/resume/download'; }
+       function downloadResume() {
+    const pdfUrl = '<%= profile.resume %>';
+    window.open('https://docs.google.com/viewer?url=' + encodeURIComponent(pdfUrl), '_blank');
+}
 
         // ── Alert helper ──────────────────────────────────────────────────────
         function showAlert(msg, type) {
