@@ -111,4 +111,3 @@ campus2career/
 ## Made by
 
 **Sejal Bajaj** — 3rd Year CSE Student, Chitkara University  
-Roll No: 2310991127
