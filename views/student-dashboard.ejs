@@ -6,6 +6,116 @@
     <title>Student Dashboard - Campus2Career</title>
     <link rel="stylesheet" href="/css/style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* ── Timeline styles ── */
+        .app-timeline {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 14px 0 10px;
+            position: relative;
+            padding: 0 4px;
+        }
+        .timeline-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            z-index: 1;
+            min-width: 60px;
+        }
+        .timeline-dot {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            border: 3px solid #e5e7eb;
+            background: #fff;
+            color: #9ca3af;
+        }
+        .timeline-dot.done   { background: #667eea; border-color: #667eea; color: #fff; }
+        .timeline-dot.active { background: #fff; border-color: #667eea; color: #667eea; box-shadow: 0 0 0 4px rgba(102,126,234,0.15); }
+        .timeline-dot.success{ background: #10b981; border-color: #10b981; color: #fff; }
+        .timeline-dot.rejected{ background: #ef4444; border-color: #ef4444; color: #fff; }
+        .timeline-label {
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: #9ca3af;
+            text-align: center;
+            white-space: nowrap;
+        }
+        .timeline-label.done, .timeline-label.active { color: #667eea; }
+        .timeline-label.success  { color: #10b981; }
+        .timeline-label.rejected { color: #ef4444; }
+        .timeline-line {
+            flex: 1;
+            height: 3px;
+            background: #e5e7eb;
+            margin-bottom: 20px;
+            z-index: 0;
+        }
+        .timeline-line.filled   { background: #667eea; }
+        .timeline-line.success  { background: #10b981; }
+        .timeline-line.rejected { background: #ef4444; }
+
+        /* ── Company name tag ── */
+        .company-tag {
+            font-size: 0.8rem;
+            color: #667eea;
+            font-weight: 600;
+            margin: 3px 0 0;
+        }
+        .company-tag i { margin-right: 4px; }
+
+        /* ── Opportunity card enhancements ── */
+        /* .internship-card {
+            position: relative;
+            overflow: hidden;
+        }
+            
+        .internship-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 4px 4px 0 0;
+        } */
+        .opp-stipend-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+            color: #16a34a;
+            border: 1px solid #bbf7d0;
+            border-radius: 20px;
+            padding: 3px 10px;
+            font-size: 0.88rem;
+            font-weight: 700;
+            margin-top: 6px;
+        }
+        .opp-meta-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 10px 0 6px;
+        }
+        .opp-meta-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: #f3f4f6;
+            color: #4b5563;
+            border-radius: 12px;
+            padding: 3px 10px;
+            font-size: 0.88rem;
+            font-weight: 500;
+        }
+        .opp-meta-chip i { color: #667eea; font-size: 0.8rem; }
+    </style>
 </head>
 <body>
     <!-- Header -->
@@ -48,12 +158,11 @@
                         <li><a href="/student-internships"><i class="fas fa-search"></i> Find Internships</a></li>
                         <li><a href="/student-applications"><i class="fas fa-file-alt"></i> My Applications</a></li>
                         <li><a href="/student-profile"><i class="fas fa-user-edit"></i> Edit Profile</a></li>
-                        <li><a href="/blogs"> <i class="fas fa-lightbulb"></i>Tech Blogs</a></li>
-                        <li><a href="/news"> <i class="fas fa-newspaper"></i>Latest News</a></li>                               
-
+                        <li><a href="/blogs"><i class="fas fa-lightbulb"></i> Tech Blogs</a></li>
+                        <li><a href="/news"><i class="fas fa-newspaper"></i> Latest News</a></li>
                     </ul>
                 </div>
-                
+
                 <div class="sidebar-section">
                     <h3>Quick Stats</h3>
                     <div class="quick-stats">
@@ -85,52 +194,44 @@
             <!-- Hero Section -->
             <section class="hero-section">
                 <div class="hero-content">
+                    <p style="font-size:0.85rem; opacity:0.75; margin-bottom:8px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase;">
+                        <%= new Date().getHours() < 12 ? '🌅 Good Morning' : new Date().getHours() < 17 ? '☀️ Good Afternoon' : '🌙 Good Evening' %>
+                    </p>
                     <h1>Welcome back, <%= user.name %>!</h1>
-                    <!-- <h1>Welcome back, <%= user.email.split('@')[0] %>!</h1> -->
-                    <p>Ready to find your next internship opportunity? Explore available positions and track your applications.</p>
+                    <p style="opacity:0.85; white-space:nowrap;">
+                        Ready to find your next internship opportunity? Explore available positions and track your applications.
+                    </p>
                 </div>
                 <div class="hero-image">
-  <img src="/images/student-dashboard.jpeg" alt="Student Dashboard">
-</div>
-
+                    <img src="/images/student-dashboard.jpeg" alt="Student Dashboard">
+                </div>
             </section>
 
             <!-- Stats Grid -->
             <section class="stats-grid">
                 <div class="stat-card">
-                    <div class="stat-icon blue">
-                        <i class="fas fa-file-alt"></i>
-                    </div>
+                    <div class="stat-icon blue"><i class="fas fa-file-alt"></i></div>
                     <div class="stat-info">
                         <h3><%= stats.totalApplications %></h3>
                         <p>Total Applications</p>
                     </div>
                 </div>
-
                 <div class="stat-card">
-                    <div class="stat-icon green">
-                        <i class="fas fa-check-circle"></i>
-                    </div>
+                    <div class="stat-icon green"><i class="fas fa-check-circle"></i></div>
                     <div class="stat-info">
                         <h3><%= stats.shortlisted %></h3>
                         <p>Shortlisted</p>
                     </div>
                 </div>
-
                 <div class="stat-card">
-                    <div class="stat-icon orange">
-                        <i class="fas fa-clock"></i>
-                    </div>
+                    <div class="stat-icon orange"><i class="fas fa-clock"></i></div>
                     <div class="stat-info">
                         <h3><%= stats.pending %></h3>
                         <p>Pending Review</p>
                     </div>
                 </div>
-
                 <div class="stat-card">
-                    <div class="stat-icon purple">
-                        <i class="fas fa-briefcase"></i>
-                    </div>
+                    <div class="stat-icon purple"><i class="fas fa-briefcase"></i></div>
                     <div class="stat-info">
                         <h3><%= availableInternships %></h3>
                         <p>Available Positions</p>
@@ -148,15 +249,50 @@
                 <% if (recentApplications.length > 0) { %>
                 <div class="applicants-grid">
                     <% recentApplications.forEach(app => { %>
+
+                    <%
+                        const isRejected  = app.status === 'rejected';
+                        const isShortlist = app.status === 'shortlisted';
+                        const isReviewed  = isShortlist || isRejected;
+
+                        const s2 = isReviewed ? 'done' : 'active';
+                        const l1 = isReviewed ? 'filled' : '';
+                        const l2 = isShortlist ? 'success' : isRejected ? 'rejected' : '';
+                        const s3 = isShortlist ? 'success' : isRejected ? 'rejected' : '';
+                        const label3   = isShortlist ? 'Shortlisted' : isRejected ? 'Rejected' : 'Decision';
+                        const dot3icon = isShortlist ? 'fa-star' : isRejected ? 'fa-times' : 'fa-question';
+                    %>
+
                     <div class="applicant-card">
                         <div class="applicant-header">
                             <div class="applicant-info">
                                 <h3><%= app.internshipTitle %></h3>
+                                <p class="company-tag">
+                                    <i class="fas fa-building"></i><%= app.internshipCompany || 'Company' %>
+                                </p>
                                 <p><%= app.internshipDepartment %></p>
                             </div>
                             <span class="status-badge <%= app.status %>"><%= app.status %></span>
                         </div>
-                        
+
+                        <!-- Application Timeline -->
+                        <div class="app-timeline">
+                            <div class="timeline-step">
+                                <div class="timeline-dot done"><i class="fas fa-paper-plane"></i></div>
+                                <span class="timeline-label done">Applied</span>
+                            </div>
+                            <div class="timeline-line <%= l1 %>"></div>
+                            <div class="timeline-step">
+                                <div class="timeline-dot <%= s2 %>"><i class="fas fa-search"></i></div>
+                                <span class="timeline-label <%= s2 %>">Reviewing</span>
+                            </div>
+                            <div class="timeline-line <%= l2 %>"></div>
+                            <div class="timeline-step">
+                                <div class="timeline-dot <%= s3 %>"><i class="fas <%= dot3icon %>"></i></div>
+                                <span class="timeline-label <%= s3 %>"><%= label3 %></span>
+                            </div>
+                        </div>
+
                         <div class="application-details">
                             <div class="detail-row">
                                 <i class="fas fa-calendar"></i>
@@ -164,8 +300,13 @@
                             </div>
                             <% if (app.status === 'shortlisted') { %>
                             <div class="detail-row">
-                                <i class="fas fa-star text-success"></i>
-                                <span>Congratulations! You've been shortlisted</span>
+                                <i class="fas fa-star" style="color:#10b981;"></i>
+                                <span style="color:#10b981; font-weight:600;">Congratulations! You've been shortlisted</span>
+                            </div>
+                            <% } else if (app.status === 'rejected') { %>
+                            <div class="detail-row">
+                                <i class="fas fa-times-circle" style="color:#ef4444;"></i>
+                                <span style="color:#ef4444;">This application was not selected</span>
                             </div>
                             <% } %>
                         </div>
@@ -181,8 +322,9 @@
                 </div>
                 <% } %>
             </section>
-<br>
-            <!-- Available Internships -->
+            <br>
+
+            <!-- Latest Opportunities -->
             <section class="content-section">
                 <div class="section-header">
                     <h2><i class="fas fa-briefcase"></i> Latest Opportunities</h2>
@@ -195,21 +337,27 @@
                         <div class="internship-header">
                             <div>
                                 <h3><%= internship.title %></h3>
+                                <p style="font-size:0.8rem; color:#667eea; font-weight:600; margin:4px 0 4px;">
+                                    <i class="fas fa-building"></i> <%= internship.company || 'Company' %>
+                                </p>
                                 <span class="status-badge active"><%= internship.status %></span>
                             </div>
                         </div>
-                        
-                        <div class="internship-details">
-                            <p><i class="fas fa-building"></i> <%= internship.department %></p>
-                            <p><i class="fas fa-map-marker-alt"></i> <%= internship.location %></p>
-                            <p><i class="fas fa-clock"></i> <%= internship.duration %></p>
-                            <p><i class="fas fa-dollar-sign"></i> <%= internship.stipend %></p>
+
+                        <div class="opp-meta-row">
+                            <span class="opp-meta-chip"><i class="fas fa-layer-group"></i> <%= internship.department %></span>
+                            <span class="opp-meta-chip"><i class="fas fa-map-marker-alt"></i> <%= internship.location %></span>
+                            <span class="opp-meta-chip"><i class="fas fa-clock"></i> <%= internship.duration %></span>
                         </div>
-                        
-                        <div class="internship-stats">
-                            <span>Posted: <%= new Date(internship.postedDate).toLocaleDateString() %></span>
+                        <div>
+                            <span class="opp-stipend-badge">
+                                <i class="fas fa-rupee-sign"></i> <%= internship.stipend %> /month
+                            </span>
                         </div>
-                        
+                        <div class="internship-stats" style="margin-top:10px;">
+                            <span><i class="fas fa-calendar-alt" style="color:#667eea;"></i> Posted: <%= new Date(internship.postedDate).toLocaleDateString() %></span>
+                        </div>
+
                         <div class="internship-actions">
                             <a href="/student-internships/<%= internship.id %>" class="btn-primary small">View Details</a>
                         </div>
@@ -223,3 +371,4 @@
     <script src="/main.js"></script>
 </body>
 </html>
+<%- include('partials/footer') %>

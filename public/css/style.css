@@ -165,7 +165,7 @@ body {
 .hero-section {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     border-radius: 1.5rem;
-    padding: 3rem;
+    padding: 4rem 3rem;
     margin-bottom: 2rem;
     display: flex;
     justify-content: space-between;

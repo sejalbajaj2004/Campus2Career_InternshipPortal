@@ -1,47 +1,68 @@
-<footer class="footer">
-        <div class="footer-container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h4>Campus2Career</h4>
-                    <p>Connecting companies with talented students worldwide.</p>
+<style>
+    footer { margin-left: 180px; margin-right: 5px;}
+</style>
+<footer style="background:#1e293b; color:#c7d2fe; padding:48px 0 0 0; margin-top:40px; font-family:inherit;">
+    <div style="max-width:1200px; margin:0 auto; padding:0 32px;">
+
+        <!-- Top section -->
+        <div style="display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:40px; padding-bottom:40px; border-bottom:1px solid #334155;">
+
+            <!-- Brand -->
+            <div>
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
+                    <div style="background:linear-gradient(135deg,#667eea,#764ba2); border-radius:8px; padding:6px 10px;">
+                        <i class="fas fa-graduation-cap" style="color:#fff; font-size:1.1rem;"></i>
+                    </div>
+                    <span style="font-size:1.2rem; font-weight:700; color:#fff;">Campus2Career</span>
                 </div>
-                <div class="footer-section">
-                    <h4>Company</h4>
-                    <ul>
-                        <li><a href="#">About Us</a></li>
-                        <li><a href="#">Careers</a></li>
-                        <li><a href="#">Contact</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Resources</h4>
-                    <ul>
-                        <li><a href="#">Help Center</a></li>
-                        <li><a href="#">Documentation</a></li>
-                        <li><a href="#">API</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Legal</h4>
-                    <ul>
-                        <li><a href="#">Privacy Policy</a></li>
-                        <li><a href="#">Terms of Service</a></li>
-                        <li><a href="#">Cookie Policy</a></li>
-                    </ul>
+                <p style="font-size:0.88rem; line-height:1.7; color:#a5b4fc; margin:0 0 20px;">
+                    Bridging the gap between talented students and great companies. Find internships, build careers.
+                </p>
+                <div style="display:flex; gap:12px;">
+                    <a href="https://linkedin.com" target="_blank" style="width:36px;height:36px;background:#312e81;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#a5b4fc;text-decoration:none;transition:background 0.2s;" onmouseover="this.style.background='#667eea'" onmouseout="this.style.background='#312e81'"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://twitter.com" target="_blank" style="width:36px;height:36px;background:#312e81;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#a5b4fc;text-decoration:none;" onmouseover="this.style.background='#667eea'" onmouseout="this.style.background='#312e81'"><i class="fab fa-twitter"></i></a>
+                    <a href="https://instagram.com" target="_blank" style="width:36px;height:36px;background:#312e81;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#a5b4fc;text-decoration:none;" onmouseover="this.style.background='#667eea'" onmouseout="this.style.background='#312e81'"><i class="fab fa-instagram"></i></a>
                 </div>
             </div>
-            <div class="footer-bottom">
-                <p>&copy; 2024 InternHub Pro. All rights reserved.</p>
-                <div class="social-links">
-                    <a href="#"><i class="fab fa-linkedin"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-facebook"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                </div>
+
+            <!-- Company -->
+            <div>
+                <h4 style="color:#fff; font-size:0.9rem; font-weight:700; margin:0 0 16px; text-transform:uppercase; letter-spacing:0.05em;">Company</h4>
+                <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:10px;">
+                    <li><a href="/about#about" style="color:#a5b4fc; text-decoration:none; font-size:0.88rem;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#a5b4fc'">About Us</a></li>
+                    <li><a href="/about#contact" style="color:#a5b4fc; text-decoration:none; font-size:0.88rem;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#a5b4fc'">Contact</a></li>
+                    <li><a href="/about#careers" style="color:#a5b4fc; text-decoration:none; font-size:0.88rem;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#a5b4fc'">Careers</a></li>
+                </ul>
+            </div>
+
+            <!-- Resources -->
+            <div>
+                <h4 style="color:#fff; font-size:0.9rem; font-weight:700; margin:0 0 16px; text-transform:uppercase; letter-spacing:0.05em;">Resources</h4>
+                <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:10px;">
+                    <li><a href="/about#help" style="color:#a5b4fc; text-decoration:none; font-size:0.88rem;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#a5b4fc'">Help Center</a></li>
+                    <li><a href="/about#docs" style="color:#a5b4fc; text-decoration:none; font-size:0.88rem;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#a5b4fc'">Documentation</a></li>
+                </ul>
+            </div>
+
+            <!-- Legal -->
+            <div>
+                <h4 style="color:#fff; font-size:0.9rem; font-weight:700; margin:0 0 16px; text-transform:uppercase; letter-spacing:0.05em;">Legal</h4>
+                <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:10px;">
+                    <li><a href="/about#privacy" style="color:#a5b4fc; text-decoration:none; font-size:0.88rem;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#a5b4fc'">Privacy Policy</a></li>
+                    <li><a href="/about#terms" style="color:#a5b4fc; text-decoration:none; font-size:0.88rem;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#a5b4fc'">Terms of Service</a></li>
+                    <li><a href="/about#cookies" style="color:#a5b4fc; text-decoration:none; font-size:0.88rem;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#a5b4fc'">Cookie Policy</a></li>
+                </ul>
             </div>
         </div>
-    </footer>
 
-    <script src="/js/main.js"></script>
+        <!-- Bottom bar -->
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:20px 0; font-size:0.82rem; color:#94a3b8;">
+            <span>© 2025 Campus2Career. All rights reserved.</span>
+            <!-- <span>Made with <i class="fas fa-heart" style="color:#f43f5e;"></i> for students & companies</span> -->
+        </div>
+    </div>
+</footer>
+
+<script src="/js/main.js"></script>
 </body>
 </html>
