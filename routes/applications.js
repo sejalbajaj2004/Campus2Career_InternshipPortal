@@ -55,7 +55,7 @@ router.put('/:id', requireAuth, requireCompany, async (req, res) => {
     }
 });
 
-// Helper: find company name and send status email to student
+// Helper: 
 async function notifyStudent(application) {
     try {
         const student    = application.studentId;
@@ -66,7 +66,7 @@ async function notifyStudent(application) {
             return;
         }
 
-        // Get company name
+        
         let companyName = 'The Company';
         if (internship.createdBy) {
             const companyUser = await User.findOne({

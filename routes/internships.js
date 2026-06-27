@@ -4,16 +4,9 @@ const { v4: uuidv4 } = require('uuid');
 
 const Internship  = require('../models/Internship');
 const Application = require('../models/Application');
-
-// ── Import auth middleware ────────────────────────────────────────────────────
-// requireAuth reads the JWT cookie and sets req.user  — needed to save createdBy
-// const { requireAuth } = require('../middleware/auth');
 const { requireAuth, requireAuthApi } = require('../middleware/auth');
 
-// ─── GET / ────────────────────────────────────────────────────────────────────
-// router.get('/', async (req, res) => {
-//     try {
-//         let internships = await Internship.find();
+
 router.get('/', requireAuth, async (req, res) => {
     try {
         const filter = req.user.role === 'company' ? { createdBy: req.user.id } : {};
@@ -60,8 +53,7 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-// ─── POST / — CREATE internship ───────────────────────────────────────────────
-// requireAuth ensures req.user is set so we can save createdBy correctly
+// ─── POST 
 router.post('/', requireAuth, async (req, res) => {
     try {
         const requiredFields = ['title', 'department', 'location', 'duration', 'description'];
@@ -88,8 +80,6 @@ router.post('/', requireAuth, async (req, res) => {
             applicationsCount: 0,
             viewsCount:        0,
 
-            // ✅ THE FIX: always save the logged-in user's ID as createdBy
-            // req.user.id is set by requireAuth from the JWT cookie
             createdBy: req.user.id
         });
 
@@ -107,21 +97,7 @@ router.post('/', requireAuth, async (req, res) => {
     }
 });
 
-// ─── PUT /:id ─────────────────────────────────────────────────────────────────
-// router.put('/:id', async (req, res) => {
-//     try {
-//         const internship = await Internship.findByIdAndUpdate(
-//             req.params.id,
-//             { ...req.body, updatedDate: new Date() },
-//             { new: true }
-//         );
-//         if (!internship) return res.status(404).json({ success: false, error: 'Internship not found' });
-//         res.json({ success: true, message: 'Internship updated successfully', data: internship });
-//     } catch (error) {
-//         res.status(500).json({ success: false, error: 'Server error' });
-//     }
-// });
-// router.put('/:id', requireAuth, async (req, res) => {
+
 router.put('/:id', requireAuthApi, async (req, res) => {
     try {
         const internship = await Internship.findOneAndUpdate(
@@ -137,10 +113,6 @@ router.put('/:id', requireAuthApi, async (req, res) => {
 });
 
 
-// ─── DELETE /:id ──────────────────────────────────────────────────────────────
-// router.delete('/:id', async (req, res) => {
-//     try {
-//         const internship = await Internship.findByIdAndDelete(req.params.id);
 router.delete('/:id', requireAuth, async (req, res) => {
     try {
         const internship = await Internship.findOneAndDelete({ _id: req.params.id, createdBy: req.user.id });
@@ -199,11 +171,7 @@ router.post('/:id/view', async (req, res) => {
     }
 });
 
-// ─── GET /stats/summary ───────────────────────────────────────────────────────
-// router.get('/stats/summary', async (req, res) => {
-//     try {
-//         const internships  = await Internship.find();
-//         const applications = await Application.find();
+
 router.get('/stats/summary', requireAuth, async (req, res) => {
     try {
         const filter = req.user.role === 'company' ? { createdBy: req.user.id } : {};

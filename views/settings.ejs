@@ -146,71 +146,7 @@
                 </div>
             </div>
 
-            <!-- Notification Settings
-            <div class="settings-section">
-                <div class="section-header">
-                    <h2><i class="fas fa-bell"></i> Notification Settings</h2>
-                    <p>Configure how you receive alerts and updates</p>
-                </div>
-                
-                <form id="notificationForm" class="settings-form">
-                    <div class="toggle-group">
-                        <div class="toggle-item">
-                            <div class="toggle-info">
-                                <h4>Email Notifications</h4>
-                                <p>Receive email alerts for new applications</p>
-                            </div>
-                            <label class="toggle-switch">
-                                <input type="checkbox" name="notifications.emailNotifications" <%= settings.notifications?.emailNotifications ? 'checked' : '' %>>
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-                        
-                        <div class="toggle-item">
-                            <div class="toggle-info">
-                                <h4>Weekly Reports</h4>
-                                <p>Get weekly summary reports via email</p>
-                            </div>
-                            <label class="toggle-switch">
-                                <input type="checkbox" name="notifications.weeklyReports" <%= settings.notifications?.weeklyReports ? 'checked' : '' %>>
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-                        
-                        <div class="toggle-item">
-                            <div class="toggle-info">
-                                <h4>Instant Alerts</h4>
-                                <p>Real-time notifications for urgent items</p>
-                            </div>
-                            <label class="toggle-switch">
-                                <input type="checkbox" name="notifications.instantAlerts" <%= settings.notifications?.instantAlerts ? 'checked' : '' %>>
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-                        
-                        <div class="toggle-item">
-                            <div class="toggle-info">
-                                <h4>Slack Integration</h4>
-                                <p>Send notifications to your Slack workspace</p>
-                            </div>
-                            <label class="toggle-switch">
-                                <input type="checkbox" name="notifications.slackIntegration" <%= settings.notifications?.slackIntegration ? 'checked' : '' %>>
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-                    </div>
-                    
-                    <div class="form-actions">
-                        <button type="submit" class="btn-primary">
-                            <i class="fas fa-save"></i> Save Notifications
-                        </button>
-                        <button type="button" class="btn-secondary" onclick="testNotification()">
-                            <i class="fas fa-paper-plane"></i> Test Notification
-                        </button>
-                    </div>
-                </form>
-            </div> -->
-            <!-- Notification Settings -->
+           
 <div class="settings-section">
     <div class="section-header">
         <h2><i class="fas fa-bell"></i> Notification Settings</h2>
@@ -366,75 +302,6 @@
     </form>
 </div>
 
-            <!-- <div class="settings-section">
-                <div class="section-header">
-                    <h2><i class="fas fa-briefcase"></i> Internship Defaults</h2>
-                    <p>Set default values for new internship postings</p>
-                </div>
-                
-                <form id="internshipDefaultsForm" class="settings-form">
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="defaultDuration">Default Duration</label>
-                            <select id="defaultDuration" name="internshipDefaults.defaultDuration">
-                                <option value="2 months" <%= settings.internshipDefaults?.defaultDuration === '2 months' ? 'selected' : '' %>>2 months</option>
-                                <option value="3 months" <%= settings.internshipDefaults?.defaultDuration === '3 months' ? 'selected' : '' %>>3 months</option>
-                                <option value="4 months" <%= settings.internshipDefaults?.defaultDuration === '4 months' ? 'selected' : '' %>>4 months</option>
-                                <option value="6 months" <%= settings.internshipDefaults?.defaultDuration === '6 months' ? 'selected' : '' %>>6 months</option>
-                                <option value="12 months" <%= settings.internshipDefaults?.defaultDuration === '12 months' ? 'selected' : '' %>>12 months</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="autoCloseAfterDays">Auto-close After (Days)</label>
-                            <input type="number" id="autoCloseAfterDays" name="internshipDefaults.autoCloseAfterDays" value="<%= settings.internshipDefaults?.autoCloseAfterDays || 30 %>" min="1" max="365">
-                        </div>
-                    </div>
-                    
-                    <div class="toggle-group">
-                        <div class="toggle-item">
-                            <div class="toggle-info">
-                                <h4>Auto-close Internships</h4>
-                                <p>Automatically close internships after specified days</p>
-                            </div>
-                            <label class="toggle-switch">
-                                <input type="checkbox" name="internshipDefaults.autoClose" <%= settings.internshipDefaults?.autoClose ? 'checked' : '' %>>
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-                        
-                        <div class="toggle-item">
-                            <div class="toggle-info">
-                                <h4>Require Cover Letter</h4>
-                                <p>Make cover letter mandatory for applications</p>
-                            </div>
-                            <label class="toggle-switch">
-                                <input type="checkbox" name="internshipDefaults.requireCoverLetter" <%= settings.internshipDefaults?.requireCoverLetter ? 'checked' : '' %>>
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-                        
-                        <div class="toggle-item">
-                            <div class="toggle-info">
-                                <h4>Allow Remote Work</h4>
-                                <p>Enable remote work option by default</p>
-                            </div>
-                            <label class="toggle-switch">
-                                <input type="checkbox" name="internshipDefaults.allowRemote" <%= settings.internshipDefaults?.allowRemote ? 'checked' : '' %>>
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-                    </div>
-                    
-                    <div class="form-actions">
-                        <button type="submit" class="btn-primary">
-                            <i class="fas fa-save"></i> Save Defaults
-                        </button>
-                    </div>
-                </form>
-            </div> -->
-
-            <!-- System Preferences -->
             <div class="settings-section">
                 <div class="section-header">
                     <h2><i class="fas fa-cog"></i> System Preferences</h2>
@@ -520,9 +387,7 @@
 </div>
 
 <script>
-/* -------------------------
-   Helper utilities
-   ------------------------- */
+
 function showAlert(message, type = 'info') {
     // basic toast
     const toast = document.createElement('div');
@@ -641,9 +506,7 @@ async function saveSettings(data, options = {}) {
     }
 }
 
-/* -------------------------
-   Initialization
-   ------------------------- */
+
 document.addEventListener('DOMContentLoaded', function() {
     // wire up forms
     ['companyForm','notificationForm','internshipDefaultsForm','preferencesForm'].forEach(id => {

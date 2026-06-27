@@ -4,7 +4,6 @@ const Internship = require('../models/Internship');
 const Application = require('../models/Application');
 const { requireAuth, requireCompany } = require('../middleware/auth');
 
-// ─── HELPERS ─────────────────────────────────────────────────────────────────
 
 function generateAnalyticsData(internships, applications) {
     const now = new Date();

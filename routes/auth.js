@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const { generateOTP, sendOTPEmail, sendWelcomeEmail } = require('../services/emailService');
 
-// ─── AUTH MIDDLEWARE (local, used only within this file) ──────────────────────
+// ─── AUTH MIDDLEWARE
 const authMiddleware = (req, res, next) => {
     const token = req.cookies.token;
     if (!token) return res.redirect('/login');
@@ -122,7 +122,7 @@ router.post('/verify-otp', async (req, res) => {
             });
         }
 
-        // Clear OTP
+    
         user.clearOTP();
         await user.save();
 

@@ -162,6 +162,8 @@
     }
     .btn-resume    { background: #fee2e2; color: #991b1b; }
     .btn-resume:hover { background: #fecaca; }
+    .btn-ats { background: linear-gradient(135deg,#667eea,#764ba2); color: #fff; }
+.btn-ats:hover { opacity: 0.9; }
     .btn-shortlist { background: #d1fae5; color: #065f46; }
     .btn-shortlist:hover { background: #a7f3d0; }
     .btn-reject    { background: #fee2e2; color: #991b1b; }
@@ -334,12 +336,22 @@
 
                             <!-- Actions -->
                             <div class="card-actions">
-                                <% if (application.resume) { %>
+                                <!-- <% if (application.resume) { %>
                                     <a href="https://docs.google.com/viewer?url=<%= encodeURIComponent(application.resume) %>"
                                        target="_blank" class="btn-resume">
                                         <i class="fas fa-file-pdf"></i> View Resume
                                     </a>
-                                <% } %>
+                                <% } %> -->
+                                <% if (application.resume) { %>
+    <a href="https://docs.google.com/viewer?url=<%= encodeURIComponent(application.resume) %>"
+       target="_blank" class="btn-resume">
+        <i class="fas fa-file-pdf"></i> View Resume
+    </a>
+    <button class="btn-ats"
+        onclick="openCompanyATS('<%= application.resume %>', '<%= application.internshipTitle %>', '<%= application.studentName %>')">
+        <i class="fas fa-robot"></i> ATS Match
+    </button>
+<% } %>
 
                                 <% if (application.status === 'pending') { %>
                                     <button class="btn-shortlist"
@@ -379,6 +391,195 @@
         </div>
     </main>
 </div>
+
+<!-- ══ COMPANY ATS MODAL ══ -->
+<div id="companyAtsModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:1000;overflow-y:auto;padding:40px 16px;">
+    <div style="background:#fff;border-radius:16px;max-width:720px;margin:0 auto;padding:32px;position:relative;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
+        <button onclick="closeCompanyATS()" style="position:absolute;top:16px;right:16px;background:none;border:none;font-size:1.3rem;cursor:pointer;color:#6b7280;">
+            <i class="fas fa-times"></i>
+        </button>
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:24px;">
+            <div style="width:48px;height:48px;background:linear-gradient(135deg,#667eea,#764ba2);border-radius:12px;display:flex;align-items:center;justify-content:center;">
+                <i class="fas fa-robot" style="color:#fff;font-size:1.3rem;"></i>
+            </div>
+            <div>
+                <h2 style="margin:0;font-size:1.3rem;color:#111827;">ATS Match Analyzer</h2>
+                <p id="atsModalSubtitle" style="margin:0;font-size:0.85rem;color:#6b7280;"></p>
+            </div>
+        </div>
+
+        <div id="catsInputArea">
+            <label style="display:block;font-size:0.85rem;font-weight:600;color:#374151;margin-bottom:6px;">
+                Job Description <span style="font-weight:400;color:#9ca3af;">(paste to match against candidate)</span>
+            </label>
+            <textarea id="catsJobDesc" rows="5"
+                placeholder="Paste the job description here..."
+                style="width:100%;box-sizing:border-box;padding:12px;border:1px solid #e5e7eb;border-radius:8px;font-size:0.88rem;resize:vertical;font-family:inherit;color:#374151;outline:none;"></textarea>
+            <button onclick="runCompanyATS()"
+                style="margin-top:16px;width:100%;padding:13px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:600;cursor:pointer;">
+                <i class="fas fa-magic"></i> Analyze Candidate Fit
+            </button>
+        </div>
+
+        <div id="catsLoading" style="display:none;text-align:center;padding:40px 0;">
+            <i class="fas fa-spinner fa-spin" style="font-size:2.5rem;color:#667eea;"></i>
+            <p style="margin-top:16px;color:#6b7280;">Analyzing candidate resume…</p>
+        </div>
+
+        <div id="catsResults" style="display:none;"></div>
+
+        <div id="catsAgainRow" style="display:none;margin-top:20px;text-align:center;">
+            <button onclick="resetCompanyATS()" style="background:none;border:1px solid #e5e7eb;padding:8px 20px;border-radius:8px;cursor:pointer;color:#6b7280;font-size:0.88rem;">
+                <i class="fas fa-redo"></i> Analyze Again
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentResumeUrl = '';
+    let currentStudentName = '';
+
+    function openCompanyATS(resumeUrl, jobTitle, studentName) {
+        currentResumeUrl = resumeUrl;
+        currentStudentName = studentName;
+        document.getElementById('atsModalSubtitle').textContent = `Analyzing ${studentName} for ${jobTitle}`;
+        document.getElementById('companyAtsModal').style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeCompanyATS() {
+        document.getElementById('companyAtsModal').style.display = 'none';
+        document.body.style.overflow = '';
+        resetCompanyATS();
+    }
+
+    function resetCompanyATS() {
+        document.getElementById('catsInputArea').style.display = 'block';
+        document.getElementById('catsResults').style.display = 'none';
+        document.getElementById('catsAgainRow').style.display = 'none';
+        document.getElementById('catsLoading').style.display = 'none';
+        document.getElementById('catsJobDesc').value = '';
+    }
+
+    async function runCompanyATS() {
+        const jobDesc = document.getElementById('catsJobDesc').value.trim();
+        document.getElementById('catsInputArea').style.display = 'none';
+        document.getElementById('catsLoading').style.display = 'block';
+
+        try {
+            const res = await fetch('/api/student/analyze-resume', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ resumeUrl: currentResumeUrl, jobDesc })
+            });
+            const data = await res.json();
+            document.getElementById('catsLoading').style.display = 'none';
+
+            if (!data.success) {
+                document.getElementById('catsResults').style.display = 'block';
+                // document.getElementById('catsResults').innerHTML =
+                //     `<div style="text-align:center;color:#ef4444;padding:20px;">
+                //         <i class="fas fa-exclamation-circle" style="font-size:2rem;"></i>
+                //         <p style="margin-top:12px;">${data.error || 'Analysis failed.'}</p>
+                //     </div>`;
+                document.getElementById('catsResults').innerHTML = `
+    <div style="text-align:center;padding:20px 0 28px;border-bottom:2px solid #f3f4f6;">
+        <div style="width:110px;height:110px;border-radius:50%;background:conic-gradient(${scoreColor} ${r.score*3.6}deg,#f3f4f6 0deg);display:inline-flex;align-items:center;justify-content:center;margin-bottom:12px;">
+            <div style="width:86px;height:86px;background:#fff;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+                <span style="font-size:1.8rem;font-weight:800;color:${scoreColor};line-height:1;">${r.score}</span>
+                <span style="font-size:0.65rem;color:#9ca3af;font-weight:600;">/ 100</span>
+            </div>
+        </div>
+        <div style="font-size:1.1rem;font-weight:700;color:${scoreColor};">${scoreLabel}</div>
+        <div style="font-size:0.82rem;color:#9ca3af;margin-top:4px;">${r.summary || ''}</div>
+    </div>
+
+    ${r.candidateSummary ? `
+    <div style="padding:20px 0;border-bottom:2px solid #f3f4f6;background:#f9fafb;border-radius:10px;padding:16px 20px;margin-top:16px;">
+        <p style="margin:0 0 8px;font-size:0.82rem;font-weight:700;color:#374151;">
+            <i class="fas fa-user-tie" style="color:#667eea;"></i> Recruiter Snapshot — ${currentStudentName}
+        </p>
+        <p style="margin:0;font-size:0.88rem;color:#4b5563;line-height:1.7;">${r.candidateSummary}</p>
+    </div>` : ''}
+
+    ${matchedHTML || missingHTML ? `
+    <div style="padding:20px 0;border-bottom:2px solid #f3f4f6;margin-top:8px;">
+        ${matchedHTML ? `<p style="margin:0 0 8px;font-size:0.82rem;font-weight:700;color:#374151;">✅ Matched Skills</p><div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;">${matchedHTML}</div>` : ''}
+        ${missingHTML ? `<p style="margin:0 0 8px;font-size:0.82rem;font-weight:700;color:#374151;">❌ Missing Skills</p><div style="display:flex;flex-wrap:wrap;gap:6px;">${missingHTML}</div>` : ''}
+    </div>` : ''}
+
+    ${suggestionsHTML ? `
+    <div style="padding:20px 0;">
+        <p style="margin:0 0 12px;font-size:0.88rem;font-weight:700;color:#374151;">
+            <i class="fas fa-lightbulb" style="color:#f59e0b;"></i> Recruiter Notes
+        </p>
+        ${suggestionsHTML}
+    </div>` : ''}
+`;
+                document.getElementById('catsAgainRow').style.display = 'block';
+                return;
+            }
+
+            const r = data.result;
+            const scoreColor = r.score >= 75 ? '#10b981' : r.score >= 50 ? '#f59e0b' : '#ef4444';
+            const scoreLabel = r.score >= 75 ? 'Strong Match' : r.score >= 50 ? 'Moderate Match' : 'Weak Match';
+
+            const matchedHTML = (r.matchedKeywords || []).map(k =>
+                `<span style="background:#d1fae5;color:#065f46;padding:3px 10px;border-radius:20px;font-size:0.78rem;font-weight:600;">${k}</span>`
+            ).join('');
+
+            const missingHTML = (r.missingKeywords || []).map(k =>
+                `<span style="background:#fee2e2;color:#991b1b;padding:3px 10px;border-radius:20px;font-size:0.78rem;font-weight:600;">${k}</span>`
+            ).join('');
+
+            const suggestionsHTML = (r.suggestions || []).map((s, i) =>
+                `<div style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid #f3f4f6;">
+                    <span style="background:#ede9fe;color:#6d28d9;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;">${i+1}</span>
+                    <p style="margin:0;font-size:0.88rem;color:#374151;line-height:1.6;">${s}</p>
+                </div>`
+            ).join('');
+
+            document.getElementById('catsResults').style.display = 'block';
+            document.getElementById('catsResults').innerHTML = `
+                <div style="text-align:center;padding:20px 0 28px;border-bottom:2px solid #f3f4f6;">
+                    <div style="width:110px;height:110px;border-radius:50%;background:conic-gradient(${scoreColor} ${r.score*3.6}deg,#f3f4f6 0deg);display:inline-flex;align-items:center;justify-content:center;margin-bottom:12px;">
+                        <div style="width:86px;height:86px;background:#fff;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+                            <span style="font-size:1.8rem;font-weight:800;color:${scoreColor};line-height:1;">${r.score}</span>
+                            <span style="font-size:0.65rem;color:#9ca3af;font-weight:600;">/ 100</span>
+                        </div>
+                    </div>
+                    <div style="font-size:1.1rem;font-weight:700;color:${scoreColor};">${scoreLabel}</div>
+                    <div style="font-size:0.82rem;color:#9ca3af;margin-top:4px;">${r.summary || ''}</div>
+                </div>
+                ${matchedHTML || missingHTML ? `
+                <div style="padding:20px 0;border-bottom:2px solid #f3f4f6;">
+                    ${matchedHTML ? `<p style="margin:0 0 8px;font-size:0.82rem;font-weight:700;color:#374151;">✅ Matched Skills</p><div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;">${matchedHTML}</div>` : ''}
+                    ${missingHTML ? `<p style="margin:0 0 8px;font-size:0.82rem;font-weight:700;color:#374151;">❌ Missing Skills</p><div style="display:flex;flex-wrap:wrap;gap:6px;">${missingHTML}</div>` : ''}
+                </div>` : ''}
+                ${suggestionsHTML ? `
+                <div style="padding:20px 0;">
+                    <p style="margin:0 0 12px;font-size:0.88rem;font-weight:700;color:#374151;">
+                        <i class="fas fa-lightbulb" style="color:#f59e0b;"></i> Recruiter Notes
+                    </p>
+                    ${suggestionsHTML}
+                </div>` : ''}
+            `;
+            document.getElementById('catsAgainRow').style.display = 'block';
+        } catch {
+            document.getElementById('catsLoading').style.display = 'none';
+            document.getElementById('catsResults').style.display = 'block';
+            document.getElementById('catsResults').innerHTML =
+                `<div style="text-align:center;color:#ef4444;padding:20px;">
+                    <i class="fas fa-exclamation-circle" style="font-size:2rem;"></i>
+                    <p style="margin-top:12px;">Network error. Please try again.</p>
+                </div>`;
+            document.getElementById('catsAgainRow').style.display = 'block';
+        }
+    }
+</script>
+
 
 <%- include('partials/footer') %>
 
